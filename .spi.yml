@@ -1,0 +1,12 @@
+version: 1
+builder:
+  configs:
+  - platform: ios
+    scheme: ExtractCaseValue
+  - platform: macos-xcodebuild
+    scheme: ExtractCaseValue
+  - platform: tvos
+    scheme: ExtractCaseValue
+  - platform: watchos
+    scheme: ExtractCaseValue
+  - documentation_targets: [ExtractCaseValue]
