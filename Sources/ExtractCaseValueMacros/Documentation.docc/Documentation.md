@@ -10,7 +10,7 @@ The `ExtractCaseValue` package provides a macro to expose assiocated values from
 
 @Row {
   @Column {
-    To extract a simple value annotate an enum with the `ExtractCaseValue` macro and provide the expected type as a generic along with a name for the comuted property. This will use the `firstMatchingType` as a default to use the first associated value in a case that matches the expected type (in this case `String`).
+    To extract a simple value annotate an enum with the `ExtractCaseValue` macro and provide the expected type as a generic along with a name for the comuted property. This will use the ``CaseExtractionKind/firstMatchingType`` as a default to use the first associated value in a case that matches the expected type (in this case `String`).
   }
   @Column {
     ![Screenshot of Xcode showing the marco expansion on a Path enum with a String as return type](sample-one)
