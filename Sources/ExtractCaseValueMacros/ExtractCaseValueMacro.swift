@@ -20,7 +20,7 @@ extension ExtractCaseValueMacro: MemberMacro {
     providingMembersOf declaration: some DeclGroupSyntax, // Declaration is the enum Type
     in context: some MacroExpansionContext
   ) throws -> [DeclSyntax] {
-    // Only apply to structs.
+    // Only apply to enums
     guard let enumDecl = declaration.as(EnumDeclSyntax.self) else {
       context.diagnose(ExtractCaseValueMacroDiagnostic.requiresEnum.diagnose(at: declaration))
       return []
