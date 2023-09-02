@@ -98,7 +98,7 @@ extension ExtractCaseValueMacro: MemberMacro {
     let elements = caseDecls.flatMap(\.elements)
 
     // infer access modifier from enum
-    let access = enumDecl.modifiers?.first(where: \.isNeededAccessLevelModifier)
+    let access = enumDecl.modifiers.first(where: \.isNeededAccessLevelModifier)
 
     var switchCaseSyntaxes: [SwitchCaseSyntax] = []
 
