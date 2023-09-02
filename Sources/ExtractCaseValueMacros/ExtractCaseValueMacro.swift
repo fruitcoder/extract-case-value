@@ -2,6 +2,7 @@ import SwiftDiagnostics
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
+import ExtractCaseValueTypes
 
 // Argument labels
 let caseParamExtractionPropertyNameArgumentLabel = "name"
