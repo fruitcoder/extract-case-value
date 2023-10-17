@@ -74,3 +74,9 @@ struct InsertDefaultValueItMessage: FixItMessage {
     MessageID(domain: "Swift", id: "ExtractCaseValue.\(self)")
   }
 }
+
+extension MacroExpansionContext {
+  func diagnose(_ diagnostic: ExtractCaseValueMacroDiagnostic, at node: some SyntaxProtocol, fixIts: [FixIt] = []) {
+    diagnose(diagnostic.diagnose(at: node, fixIts: fixIts))
+  }
+}

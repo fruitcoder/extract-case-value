@@ -22,7 +22,7 @@ extension ExtractCaseValueMacro: MemberMacro {
   ) throws -> [DeclSyntax] {
     // Only apply to enums
     guard let enumDecl = declaration.as(EnumDeclSyntax.self) else {
-      context.diagnose(ExtractCaseValueMacroDiagnostic.requiresEnum.diagnose(at: declaration))
+      context.diagnose(.requiresEnum, at: declaration)
       return []
     }
 
@@ -30,18 +30,18 @@ extension ExtractCaseValueMacro: MemberMacro {
       let arguments = attribute.arguments,
       case let .argumentList(arguments) = arguments
     else {
-      context.diagnose(ExtractCaseValueMacroDiagnostic.requiresArgs.diagnose(at: attribute))
+      context.diagnose(.requiresArgs, at: attribute)
       return []
     }
 
     // get `name` argument
     guard let propertyNameArg = arguments.first(labeled: caseParamExtractionPropertyNameArgumentLabel) else {
-      context.diagnose(ExtractCaseValueMacroDiagnostic.requiresPropertyNameArg.diagnose(at: attribute))
+      context.diagnose(.requiresPropertyNameArg, at: attribute)
       return []
     }
 
     guard let propertyNameString = propertyNameArg.expression.stringLiteralSegment else {
-      context.diagnose(ExtractCaseValueMacroDiagnostic.requiresPropertyNameStringLiteral.diagnose(at: propertyNameArg.expression))
+      context.diagnose(.requiresPropertyNameStringLiteral, at: propertyNameArg.expression)
       return []
     }
 
@@ -64,7 +64,7 @@ extension ExtractCaseValueMacro: MemberMacro {
         .arguments.first?
         .argument
     else {
-      context.diagnose(ExtractCaseValueMacroDiagnostic.requiresGenericType.diagnose(at: attribute))
+      context.diagnose(.requiresGenericType, at: attribute)
       return []
     }
 
@@ -113,7 +113,7 @@ extension ExtractCaseValueMacro: MemberMacro {
           )
           continue
         } else {
-          context.diagnose(ExtractCaseValueMacroDiagnostic.noAssociatedValues(case: element.identifier.text).diagnose(at: element, fixIts: [insertDefaultFixIt]))
+          context.diagnose(.noAssociatedValues(case: element.name.text), at: element, fixIts: [insertDefaultFixIt])
           return []
         }
       }
@@ -133,13 +133,13 @@ extension ExtractCaseValueMacro: MemberMacro {
             didUseDefaultValue = true
             break
           } else {
-            context.diagnose(ExtractCaseValueMacroDiagnostic.noValue(case: element.identifier.text, index: index).diagnose(at: element, fixIts: [insertDefaultFixIt]))
+            context.diagnose(.noValue(case: element.name.text, index: index), at: element, fixIts: [insertDefaultFixIt])
             return []
           }
         }
 
         guard associatedValue.element.type.matchesReturnType(returnType) else {
-          context.diagnose(ExtractCaseValueMacroDiagnostic.typeMismatch(case: element.identifier.text, index: index).diagnose(at: associatedValue.element))
+          context.diagnose(.typeMismatch(case: element.name.text, index: index), at: associatedValue.element)
           return []
         }
 
@@ -154,13 +154,20 @@ extension ExtractCaseValueMacro: MemberMacro {
             didUseDefaultValue = true
             break
           } else {
-            context.diagnose(ExtractCaseValueMacroDiagnostic.noAssociatedValueForName(name: name, case: element.identifier.text).diagnose(at: element, fixIts: [insertDefaultFixIt]))
+            context.diagnose(
+              .noAssociatedValueForName(name: name, case: element.name.text),
+              at: element,
+              fixIts: [insertDefaultFixIt]
+            )
             return []
           }
         }
 
         guard associatedValue.type.matchesReturnType(returnType) else {
-          context.diagnose(ExtractCaseValueMacroDiagnostic.typeMismatchNamed(name: name, case: element.identifier.text).diagnose(at: associatedValue))
+          context.diagnose(
+            .typeMismatchNamed(name: name, case: element.name.text),
+            at: associatedValue
+          )
           return []
         }
 
@@ -176,7 +183,11 @@ extension ExtractCaseValueMacro: MemberMacro {
             didUseDefaultValue = true
             break
           } else {
-            context.diagnose(ExtractCaseValueMacroDiagnostic.noMatchingType(type: "\(returnType)", case: element.identifier.text).diagnose(at: element, fixIts: [insertDefaultFixIt]))
+            context.diagnose(
+              .noMatchingType(type: "\(returnType)", case: element.name.text),
+              at: element,
+              fixIts: [insertDefaultFixIt]
+            )
             return []
           }
         }
