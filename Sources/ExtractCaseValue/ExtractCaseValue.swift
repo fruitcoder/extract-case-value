@@ -20,6 +20,7 @@ import ExtractCaseValueMacros
 ///   case relative(String)
 ///   case absolute(String)
 ///   case root
+///   
 ///   var path: String {
 ///     switch self {
 ///     case let .relative(__macro_local_4pathfMu_):
@@ -53,6 +54,7 @@ public macro ExtractCaseValue<T>(name: String, kind: CaseExtractionKind = .defau
 ///   case relative(String)
 ///   case absolute(String)
 ///   case root
+///
 ///   var path: String {
 ///     switch self {
 ///     case let .relative(__macro_local_4pathfMu_):

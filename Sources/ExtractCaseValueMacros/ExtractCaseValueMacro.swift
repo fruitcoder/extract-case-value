@@ -27,7 +27,7 @@ extension ExtractCaseValueMacro: MemberMacro {
     }
 
     guard
-      let arguments = attribute.argument,
+      let arguments = attribute.arguments,
       case let .argumentList(arguments) = arguments
     else {
       context.diagnose(ExtractCaseValueMacroDiagnostic.requiresArgs.diagnose(at: attribute))
@@ -59,10 +59,10 @@ extension ExtractCaseValueMacro: MemberMacro {
     // get expected type
     guard
       let returnType = attribute
-        .attributeName.as(SimpleTypeIdentifierSyntax.self)?
+        .attributeName.as(IdentifierTypeSyntax.self)?
         .genericArgumentClause?
         .arguments.first?
-        .argumentType
+        .argument
     else {
       context.diagnose(ExtractCaseValueMacroDiagnostic.requiresGenericType.diagnose(at: attribute))
       return []
@@ -83,10 +83,11 @@ extension ExtractCaseValueMacro: MemberMacro {
 
     // create fix-it to add a default value if necessary
     guard
-      let tupleList = attribute.argument?.as(TupleExprElementListSyntax.self)
+      let tupleList = attribute.arguments?.as(LabeledExprListSyntax.self)
     else { return [] }
     let expr: ExprSyntax = ", \(propertyNameString): <#Type#>"
-    let newTupleList = tupleList.inserting(TupleExprElementSyntax(expression: expr), at: tupleList.count)
+    var newTupleList = tupleList
+    newTupleList.append(LabeledExprSyntax(expression: expr))
 
     let insertDefaultFixIt = FixIt(
       message: InsertDefaultValueItMessage(),
@@ -98,17 +99,17 @@ extension ExtractCaseValueMacro: MemberMacro {
     let elements = caseDecls.flatMap(\.elements)
 
     // infer access modifier from enum
-    let access = enumDecl.modifiers?.first(where: \.isNeededAccessLevelModifier)
+    let access = enumDecl.modifiers.first(where: \.isNeededAccessLevelModifier)
 
     var switchCaseSyntaxes: [SwitchCaseSyntax] = []
 
     for element in elements {
       let caseSyntax = element.as(EnumCaseElementSyntax.self)!
 
-      guard let paramList = caseSyntax.associatedValue?.parameterList else {
+      guard let paramList = caseSyntax.parameterClause?.parameters else {
         if let defaultValue {
           switchCaseSyntaxes.append(
-            "case .\(element.identifier): return \(defaultValue)"
+            "case .\(element.name): return \(defaultValue)"
           )
           continue
         } else {
@@ -127,7 +128,7 @@ extension ExtractCaseValueMacro: MemberMacro {
         else {
           if let defaultValue {
             switchCaseSyntaxes.append(
-              "case .\(element.identifier): return \(defaultValue)"
+              "case .\(element.name): return \(defaultValue)"
             )
             didUseDefaultValue = true
             break
@@ -148,7 +149,7 @@ extension ExtractCaseValueMacro: MemberMacro {
         guard let associatedValue = paramList.first(labeled: name), let index = paramList.firstIndex(of: name) else {
           if let defaultValue {
             switchCaseSyntaxes.append(
-              "case .\(element.identifier): return \(defaultValue)"
+              "case .\(element.name): return \(defaultValue)"
             )
             didUseDefaultValue = true
             break
@@ -170,7 +171,7 @@ extension ExtractCaseValueMacro: MemberMacro {
         else {
           if let defaultValue {
             switchCaseSyntaxes.append(
-              "case .\(element.identifier): return \(defaultValue)"
+              "case .\(element.name): return \(defaultValue)"
             )
             didUseDefaultValue = true
             break
@@ -192,7 +193,7 @@ extension ExtractCaseValueMacro: MemberMacro {
           .joined(separator: ", ")
 
         switchCaseSyntaxes.append(
-          "case let .\(element.identifier)(\(raw: variablesAndUnderscores)): return \(uniqueVariableName)"
+          "case let .\(element.name)(\(raw: variablesAndUnderscores)): return \(uniqueVariableName)"
         )
       }
 
