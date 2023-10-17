@@ -24,6 +24,7 @@ final class ExtractCaseValueTests: XCTestCase {
           case relative(String)
           case absolute(String)
           case root
+
           var path: String {
             switch self {
             case let .relative(__macro_local_4pathfMu_):
@@ -57,6 +58,7 @@ final class ExtractCaseValueTests: XCTestCase {
           case relative(String)
           case absolute(String)
           case root
+
           public var path: String {
             switch self {
             case let .relative(__macro_local_4pathfMu_):
@@ -88,6 +90,7 @@ final class ExtractCaseValueTests: XCTestCase {
         enum Coordinate {
           case twoDee(x: Double, y: Double)
           case threeDee(x: Double, y: Double, z: Double)
+
           var x: Double {
             switch self {
             case let .twoDee(__macro_local_1xfMu_, _):
@@ -119,6 +122,7 @@ final class ExtractCaseValueTests: XCTestCase {
           case relative(String)
           case absolute(String)
           case root
+
           var path: String {
             switch self {
             case let .relative(__macro_local_4pathfMu_):
@@ -150,6 +154,7 @@ final class ExtractCaseValueTests: XCTestCase {
         enum Coordinate {
           case twoDee(x: Double, y: Double)
           case threeDee(x: Double, y: Double, z: Double)
+
           var y: Double {
             switch self {
             case let .twoDee(_, __macro_local_1yfMu_):
@@ -179,6 +184,7 @@ final class ExtractCaseValueTests: XCTestCase {
         enum Coordinate {
           case twoDee(x: Double, y: Double)
           case threeDee(x: Double, y: Double, z: Double)
+
           var z: Double? {
             switch self {
             case .twoDee:
@@ -210,6 +216,7 @@ final class ExtractCaseValueTests: XCTestCase {
         enum Coordinate {
           case twoDee(x: Double, y: Double)
           case threeDee(x: Double, y: Double, z: Double)
+
           var x: Double {
             switch self {
             case let .twoDee(__macro_local_1xfMu_, _):
@@ -218,6 +225,7 @@ final class ExtractCaseValueTests: XCTestCase {
               return __macro_local_1xfMu0_
             }
           }
+
           var y: Double {
             switch self {
             case let .twoDee(_, __macro_local_1yfMu_):
@@ -226,6 +234,7 @@ final class ExtractCaseValueTests: XCTestCase {
               return __macro_local_1yfMu0_
             }
           }
+
           var z: Double? {
             switch self {
             case .twoDee:
@@ -263,6 +272,7 @@ final class ExtractCaseValueTests: XCTestCase {
           case array([_JSON])
           case bool(Bool)
           case null
+
           var string: String? {
             switch self {
             case let .string(__macro_local_6stringfMu_):
@@ -294,8 +304,7 @@ final class ExtractCaseValueTests: XCTestCase {
       """,
       expandedSource: """
 
-        struct NotAnEnum {
-        }
+        struct NotAnEnum {}
         """,
       diagnostics: [
         .init(message: "'ExtractCaseValue' macro can only be applied to an enum", line: 1, column: 1)
@@ -313,8 +322,7 @@ final class ExtractCaseValueTests: XCTestCase {
       """,
       expandedSource: """
 
-        enum AnEnum {
-        }
+        enum AnEnum {}
         """,
       diagnostics: [
         .init(message: "'ExtractCaseValue' macro requires arguments", line: 1, column: 1)
@@ -332,8 +340,7 @@ final class ExtractCaseValueTests: XCTestCase {
       """,
       expandedSource: """
 
-        enum AnEnum {
-        }
+        enum AnEnum {}
         """,
       diagnostics: [
         .init(message: "'ExtractCaseValue' macro requires `name` argument", line: 1, column: 1)
@@ -351,8 +358,7 @@ final class ExtractCaseValueTests: XCTestCase {
       """,
       expandedSource: """
 
-        enum AnEnum {
-        }
+        enum AnEnum {}
         """,
       diagnostics: [
         .init(message: "'ExtractCaseValue' macro argument `name` must be a string literal", line: 1, column: 33)
@@ -370,8 +376,7 @@ final class ExtractCaseValueTests: XCTestCase {
       """,
       expandedSource: """
 
-        enum AnEnum {
-        }
+        enum AnEnum {}
         """,
       diagnostics: [
         .init(message: "'ExtractCaseValue' macro requires a generic type for the computed property", line: 1, column: 1)
@@ -569,6 +574,7 @@ final class ExtractCaseValueTests: XCTestCase {
         enum Coordinate {
           case twoDee(x: Double, y: Double)
           case threeDee(x: Double, y: Double, z: Double)
+
           var a: Double? {
             switch self {
             case .twoDee:
